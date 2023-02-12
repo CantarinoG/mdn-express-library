@@ -4,6 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+require('dotenv').config();
+
+console.log(process.env.USER)
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -12,7 +16,7 @@ var app = express();
 //Set up mongoose connection
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
-const mongoDB = "mongodb+srv://admin:admin123@cluster0.h5ykkoj.mongodb.net/local_library?retryWrites=true&w=majority";
+const mongoDB = `mongodb+srv://${process.env.USER}:${process.env.PASS}@cluster0.h5ykkoj.mongodb.net/local_library?retryWrites=true&w=majority`;
 
 main().catch(err => console.log(err));
 
@@ -50,5 +54,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
-//mongodb+srv://admin:admin123@cluster0.h5ykkoj.mongodb.net/local_library?retryWrites=true&w=majority
