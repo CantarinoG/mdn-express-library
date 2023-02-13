@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const { DateTime } = require("luxon");
+
 const Schema = mongoose.Schema;
 
 const AuthorSchema = new Schema({
@@ -16,7 +18,7 @@ AuthorSchema.virtual("name").get(
         //We want to make sure we handle the exception by returning an empty string for that case
         let fullname = "";
         if (this.first_name && this.first_name) {
-            fullname = `${this.family_name}, ${this.first_name}}`;
+            fullname = `${this.family_name}, ${this.first_name}`;
         }
         if (!this.first_name || !this.family_name) {
             fullname = "";
@@ -31,6 +33,17 @@ AuthorSchema.virtual("url").get(
         return `/catalog/author/${this._id}`;
     }
 );
+
+AuthorSchema.virtual("life_span_formatted").get(function () {
+    if (this.date_of_death){
+        return DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATETIME_MED) + " - " +
+        DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATETIME_MED);
+    }
+    if (this.date_of_birth){
+        return DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATETIME_MED) + " - Present";
+    }
+    return "Date of birth not available";
+  });
 
 //Export model
 module.exports = mongoose.model("Author", AuthorSchema);
