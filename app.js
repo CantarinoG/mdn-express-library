@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const compression = require("compression");
+const helmet = require("helmet");
+
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
@@ -31,6 +34,10 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use(helmet());
+app.use(compression()); // Compress all routes
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
